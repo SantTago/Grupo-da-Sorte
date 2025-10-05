@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -43,6 +42,11 @@
             overflow: hidden;
         }
 
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
         .header::before {
             content: '';
             position: absolute;
@@ -80,6 +84,104 @@
             letter-spacing: 2px;
             font-weight: 600;
         }
+
+        /* Botão ADM - Novo */
+        .admin-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #d32f2f; /* Vermelho */
+            color: white;
+            border: 2px solid #ffd700;
+            padding: 8px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: background 0.3s, transform 0.3s;
+            z-index: 2;
+        }
+
+        .admin-btn:hover {
+            background: #f44336;
+            transform: scale(1.05);
+        }
+        
+        /* Modal de Senha - Novo */
+        .modal {
+            display: none; /* Escondido por padrão */
+            position: fixed;
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.8); 
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #1a472a;
+            margin: auto;
+            padding: 30px;
+            border: 5px solid #ffd700;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #d32f2f;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #passwordInput {
+            width: 90%;
+            padding: 10px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border: 2px solid #ffd700;
+            background-color: #0d2818;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        #submitPassword {
+            background-color: #ffd700;
+            color: #2d5a3d;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.3s;
+        }
+
+        #submitPassword:hover {
+            background-color: #ffed4e;
+        }
+
+        #feedback {
+            margin-top: 15px;
+            font-weight: 700;
+        }
+
+        /* Adicione o restante do seu CSS aqui para evitar conflitos */
 
         /* Sorteio em Destaque */
         .live-draw {
@@ -549,7 +651,7 @@
             
             .result-card {
                 padding: 20px 15px;
-              
+            
             }
             
             .result-title {
@@ -601,6 +703,13 @@
             .content-section {
                 padding: 10px;
             }
+
+            .admin-btn {
+                top: 10px;
+                right: 10px;
+                padding: 6px 10px;
+                font-size: 0.9rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -632,13 +741,25 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
-        <h1 class="logo">🎱 GRUPO DA SORTE 🎱</h1>
-        <p class="subtitle">REGIÃO DE GRANJA - CE</p>
+        <button class="admin-btn" id="adminButton">ADM</button>
+        <div class="header-content">
+            <h1 class="logo">🎱 GRUPO DA SORTE 🎱</h1>
+            <p class="subtitle">REGIÃO DE GRANJA - CE</p>
+        </div>
     </header>
 
-    <!-- Sorteio em Destaque -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>Acesso Restrito</h2>
+            <p>Digite a senha de administrador:</p>
+            <input type="password" id="passwordInput" placeholder="Senha" maxlength="4" onkeypress="handleKeyPress(event)">
+            <button id="submitPassword" onclick="checkPassword()">Entrar</button>
+            <div id="feedback"></div>
+        </div>
+    </div>
+    
     <section class="live-draw">
         <div class="live-content">
             <h2 class="live-title">🔥 SORTEIOS EM ANDAMENTO 🔥</h2>
@@ -670,7 +791,6 @@
         </div>
     </section>
 
-    <!-- Navegação -->
     <nav class="nav-tabs">
         <button class="nav-tab active" onclick="showSection('semanal')">🗓️ Semanal</button>
         <button class="nav-tab" onclick="showSection('mensal')">📅 Mensal</button>
@@ -678,16 +798,15 @@
         <button class="nav-tab" onclick="showSection('vendedores')">👥 Vendedores</button>
     </nav>
 
-    <!-- Seção Semanal -->
     <section id="semanal" class="content-section active">
         <div class="results-container">
             <div class="result-card">
                 <h3 class="result-title">🏆 ÚLTIMO SORTEIO SEMANAL</h3>
                 <div class="lottery-balls">
-                    <div class="lottery-ball">07</div>
-                    <div class="lottery-ball">23</div>
-                    <div class="lottery-ball">31</div>
-                    <div class="lottery-ball">45</div>
+                    <div class="lottery-ball">7</div>
+                    <div class="lottery-ball">3</div>
+                    <div class="lottery-ball">1</div>
+                    <div class="lottery-ball">5</div>
                 </div>
                 <div class="result-info">
                     <strong>Sorteio #1537</strong><br>
@@ -718,16 +837,15 @@
         </div>
     </section>
 
-    <!-- Seção Mensal -->
     <section id="mensal" class="content-section">
         <div class="results-container">
             <div class="result-card">
                 <h3 class="result-title">🎯 ÚLTIMO SORTEIO MENSAL</h3>
                 <div class="lottery-balls">
-                    <div class="lottery-ball">03</div>
-                    <div class="lottery-ball">17</div>
-                    <div class="lottery-ball">28</div>
-                    <div class="lottery-ball">39</div>
+                    <div class="lottery-ball">3</div>
+                    <div class="lottery-ball">7</div>
+                    <div class="lottery-ball">8</div>
+                    <div class="lottery-ball">9</div>
                 </div>
                 <div class="result-info">
                     <strong>Sorteio Mensal #127</strong><br>
@@ -758,7 +876,6 @@
         </div>
     </section>
 
-    <!-- Seção Histórico -->
     <section id="historico" class="content-section">
         <div class="history-section">
             <h2 class="history-title">📋 HISTÓRICO DE GANHADORES</h2>
@@ -767,55 +884,54 @@
                     <div class="history-date">08/01/2024 - Semanal</div>
                     <div class="history-winner">Maria Silva Santos - Granja</div>
                     <div class="history-prize">R$ 3.000,00</div>
-                    <div style="font-size: 0.9rem; color: #888; margin-top: 5px;">Números: 07-23-31-45</div>
+                    <div style="font-size: 0.9rem; color: #888; margin-top: 5px;">Números: 7-3-1-5</div>
                 </div>
                 <div class="history-item">
                     <div class="history-date">30/12/2023 - Mensal</div>
                     <div class="history-winner">João Carlos Oliveira - Martinópole</div>
                     <div class="history-prize">R$ 10.000,00</div>
-                    <div style="font-size: 0.9rem; color: #888; margin-top: 5px;">Números: 03-17-28-39</div>
+                    <div style="font-size: 0.9rem; color: #888; margin-top: 5px;">Números: 3-7-8-9</div>
                 </div>
                 <div class="history-item">
                     <div class="history-date">01/01/2024 - Semanal</div>
                     <div class="history-winner">Ana Paula Costa - Senador Sá</div>
                     <div class="history-prize">R$ 3.000,00</div>
-                    <div style="font-size: 0.9rem; color: #888; margin-top: 5px;">Números: 12-25-38-49</div>
+                    <div style="font-size: 0.9rem; color: #888; margin-top: 5px;">Números: 2-5-8-9</div>
                 </div>
                 <div class="history-item">
                     <div class="history-date">25/12/2023 - Semanal</div>
                     <div class="history-winner">Roberto Ferreira - Granja</div>
                     <div class="history-prize">R$ 3.000,00</div>
-                    <div style="font-size: 0.9rem; color: #888; margin-top: 5px;">Números: 05-18-33-47</div>
+                    <div style="font-size: 0.9rem; color: #888; margin-top: 5px;">Números: 5-8-3-7</div>
                 </div>
                 <div class="history-item">
                     <div class="history-date">30/11/2023 - Mensal</div>
                     <div class="history-winner">Carla Mendes Lima - Uruoca</div>
                     <div class="history-prize">R$ 10.000,00</div>
-                    <div style="font-size: 0.9rem; color: #888; margin-top: 5px;">Números: 09-21-36-44</div>
+                    <div style="font-size: 0.9rem; color: #888; margin-top: 5px;">Números: 9-1-6-4</div>
                 </div>
                 <div class="history-item">
                     <div class="history-date">18/12/2023 - Semanal</div>
                     <div class="history-winner">Pedro Henrique - Camocim</div>
                     <div class="history-prize">R$ 3.000,00</div>
-                    <div style="font-size: 0.9rem; color: #888; margin-top: 5px;">Números: 14-27-35-52</div>
+                    <div style="font-size: 0.9rem; color: #888; margin-top: 5px;">Números: 4-7-5-2</div>
                 </div>
                 <div class="history-item">
                     <div class="history-date">11/12/2023 - Semanal</div>
                     <div class="history-winner">Francisca Alves - Granja</div>
                     <div class="history-prize">R$ 3.000,00</div>
-                    <div style="font-size: 0.9rem; color: #888; margin-top: 5px;">Números: 08-19-29-41</div>
+                    <div style="font-size: 0.9rem; color: #888; margin-top: 5px;">Números: 8-9-9-1</div>
                 </div>
                 <div class="history-item">
                     <div class="history-date">04/12/2023 - Semanal</div>
                     <div class="history-winner">Antônio José Silva - Martinópole</div>
                     <div class="history-prize">R$ 3.000,00</div>
-                    <div style="font-size: 0.9rem; color: #888; margin-top: 5px;">Números: 16-24-37-48</div>
+                    <div style="font-size: 0.9rem; color: #888; margin-top: 5px;">Números: 6-4-7-8</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Seção Vendedores -->
     <section id="vendedores" class="content-section">
         <div class="sellers-section">
             <h2 class="sellers-title">👥 VENDEDORES AUTORIZADOS</h2>
@@ -871,52 +987,88 @@
         </div>
     </section>
 
-    <!-- Botão WhatsApp Flutuante -->
-    <a href="https://wa.me/5588999999999?text=Olá! Gostaria de participar dos sorteios do Grupo da Sorte!" target="_blank" rel="noopener noreferrer" class="whatsapp-float">
-        💬
+    <a href="https://wa.me/5588999999999" class="whatsapp-float" target="_blank" title="Fale Conosco no WhatsApp">
+        <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M12 2A10 10 0 0 0 2 12A10 10 0 0 0 12 22A10 10 0 0 0 22 12A10 10 0 0 0 12 2M18.4 15.6C17.6 16.8 15.8 17.6 13.9 17.6C10.5 17.6 7.7 14.8 7.7 11.4C7.7 9.5 8.5 7.7 9.7 7C9.9 6.8 10.2 6.7 10.4 6.9C10.6 7 10.7 7.2 10.7 7.5L10.9 9.3C10.9 9.6 10.8 9.9 10.6 10.1C10.5 10.2 10.3 10.3 10.1 10.3C9.9 10.3 9.8 10.4 9.7 10.6C9.6 10.8 9.6 11 9.6 11.2C9.6 12.8 10.9 14.1 12.5 14.1C12.7 14.1 12.9 14.1 13.1 14C13.3 13.9 13.4 13.7 13.5 13.5C13.5 13.3 13.5 13.1 13.6 12.9L13.8 11C13.8 10.8 13.9 10.6 14.1 10.5C14.3 10.4 14.5 10.4 14.7 10.5L16.5 10.8C16.8 10.8 17 11 17.1 11.2C17.2 11.4 17.2 11.6 17.1 11.8L16.9 13.6C16.8 13.9 16.6 14.2 16.4 14.4C16.8 15.1 17.2 15.6 17.7 16C18.1 16.4 18.4 15.9 18.4 15.6Z" />
+        </svg>
     </a>
 
     <script>
-        // Função para mostrar seções
-        function showSection(sectionName) {
-            // Esconder todas as seções
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
-            });
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const adminButton = document.getElementById('adminButton');
+            const modal = document.getElementById('passwordModal');
+            const passwordInput = document.getElementById('passwordInput');
+            const feedback = document.getElementById('feedback');
             
-            // Remover classe active de todas as abas
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
+            // =======================================================
+            // *** 1. COLOQUE A SENHA DE ADMINISTRAÇÃO AQUI ***
+            // (Lembre-se: Isso é inseguro para senhas reais!)
+            const CORRECT_PASSWORD = '8107'; 
             
-            // Mostrar seção selecionada
-            document.getElementById(sectionName).classList.add('active');
-            
-            // Adicionar classe active na aba clicada
-            event.target.classList.add('active');
-        }
+            // *** 2. COLOQUE O DIRETÓRIO DA PRÓXIMA PÁGINA AQUI ***
+            const ADMIN_PAGE_URL = 'restrito.html'; 
+            // =======================================================
 
-        // Efeito de brilho na imagem do sorteio
-        setInterval(() => {
-            const drawImage = document.querySelector('.draw-image');
-            drawImage.style.transform = 'scale(1.02)';
-            setTimeout(() => {
-                drawImage.style.transform = 'scale(1)';
-            }, 500);
-        }, 4000);
+            // ----------------------------------------------------
+            // Funções do Modal de Senha
+            // ----------------------------------------------------
 
-        // Animação das bolas de loteria
-        setInterval(() => {
-            const balls = document.querySelectorAll('.lottery-ball');
-            balls.forEach((ball, index) => {
-                setTimeout(() => {
-                    ball.style.transform = 'scale(1.1)';
-                    setTimeout(() => {
-                        ball.style.transform = 'scale(1)';
-                    }, 200);
-                }, index * 100);
+            adminButton.addEventListener('click', () => {
+                modal.style.display = 'flex';
+                passwordInput.value = ''; // Limpa o campo ao abrir
+                feedback.textContent = ''; // Limpa a mensagem
             });
-        }, 8000);
+
+            function closeModal() {
+                modal.style.display = 'none';
+            }
+
+            function handleKeyPress(event) {
+                if (event.key === 'Enter') {
+                    checkPassword();
+                }
+            }
+
+            function checkPassword() {
+                const enteredPassword = passwordInput.value;
+
+                if (enteredPassword === CORRECT_PASSWORD) {
+                    feedback.textContent = 'Acesso liberado! Redirecionando...';
+                    feedback.style.color = '#25d366'; // Verde para sucesso
+                    
+                    // --- REDIRECIONAMENTO DE SUCESSO ---
+                    window.location.href = ADMIN_PAGE_URL; 
+                    // ------------------------------------
+                    
+                } else {
+                    feedback.textContent = 'Senha incorreta. Tente novamente.';
+                    feedback.style.color = '#d32f2f'; // Vermelho para erro
+                }
+            }
+            
+            // ----------------------------------------------------
+            // Funções de Navegação de Abas
+            // ----------------------------------------------------
+
+            function showSection(sectionId) {
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+
+                document.getElementById(sectionId).classList.add('active');
+                // Adiciona 'active' à aba clicada (usando o atributo onclick para encontrar)
+                document.querySelector(`.nav-tab[onclick="showSection('${sectionId}')"]`).classList.add('active');
+            }
+
+            // Coloca as funções no escopo global para que os atributos onclick no HTML as encontrem
+            window.closeModal = closeModal;
+            window.handleKeyPress = handleKeyPress;
+            window.checkPassword = checkPassword;
+            window.showSection = showSection;
+        });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'988fe70d64b9ba19',t:'MTc1OTUzMDgyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>

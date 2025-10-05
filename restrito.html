@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRUPO DA SORTE - Loteria Oficial Granja-CE</title>
+    <style>
+        /* Variáveis CSS para Cores */
+        :root {
+            --color-dark-green: #0d2818;
+            --color-medium-green: #1a472a;
+            --color-light-green: #2d5a3d;
+            --color-gold: #ffd700;
+            --color-red: #d32f2f;
+            --color-red-light: #f44336;
+            --font-family: 'Arial Black', 'Arial', sans-serif;
+        }
+
+        /* Reset e Base */
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-family);
+            background: linear-gradient(135deg, var(--color-dark-green) 0%, var(--color-medium-green) 25%, var(--color-light-green) 50%, var(--color-medium-green) 75%, var(--color-dark-green) 100%);
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Fundo com Efeitos */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 25%, rgba(255, 215, 0, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 75%, rgba(255, 255, 255, 0.08) 0%, transparent 40%),
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255, 215, 0, 0.02) 35px, rgba(255, 215, 0, 0.02) 70px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(45deg, var(--color-light-green), var(--color-medium-green), var(--color-dark-green));
+            padding: 35px 20px;
+            text-align: center;
+            border-bottom: 8px solid var(--color-gold);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo {
+            font-size: clamp(2.5rem, 8vw, 3.8rem); 
+            font-weight: 900;
+            color: var(--color-gold);
+            text-shadow: 
+                3px 3px 0px var(--color-red),
+                6px 6px 10px rgba(0, 0, 0, 0.8),
+                0 0 20px rgba(255, 215, 0, 0.5);
+            letter-spacing: 5px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+            animation: logoGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes logoGlow {
+            0% { text-shadow: 3px 3px 0px var(--color-red), 6px 6px 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.5); }
+            100% { text-shadow: 3px 3px 0px var(--color-red), 6px 6px 10px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.8); }
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            color: #ffffff;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* Seção do Gerador de Números */
+        .generator-section {
+            background: linear-gradient(135deg, var(--color-medium-green), var(--color-light-green));
+            margin: 20px auto; 
+            max-width: 1200px;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            border: 4px solid var(--color-gold);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            position: relative; 
+            overflow: hidden; 
+            flex-grow: 1; 
+        }
+
+        #generator-title {
+            font-size: 2.2rem;
+            color: var(--color-gold);
+            margin-bottom: 25px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        #generate-button {
+            background-color: var(--color-red); 
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 30px; 
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10; 
+            position: relative;
+        }
+
+        #generate-button:hover:not(:disabled) {
+            background-color: var(--color-red-light); 
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        #generate-button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        #sequences-container {
+            display: flex;
+            flex-wrap: wrap; 
+            justify-content: center;
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .sequence-card {
+            background: rgba(0, 0, 0, 0.4); 
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid var(--color-gold); 
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 300px; 
+            text-align: center;
+            opacity: 0; 
+            transform: translateY(20px); 
+            animation: fadeInSlideUp 0.6s ease-out forwards;
+        }
+        .sequence-card:nth-child(1) { animation-delay: 0.1s; }
+        .sequence-card:nth-child(2) { animation-delay: 0.2s; }
+        .sequence-card:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes fadeInSlideUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .sequence-card-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--color-gold); 
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .sequence-balls-display {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            min-height: 60px; 
+        }
+
+        .generated-ball {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border: 3px solid;
+            transform: scale(0); 
+        }
+        
+        /* Cores das Bolas Sorteio */
+        .sequence-card:nth-child(1) .generated-ball { 
+            background: linear-gradient(145deg, var(--color-gold), #ffed4e); 
+            border-color: var(--color-red); 
+            color: var(--color-light-green); 
+        }
+        .sequence-card:nth-child(2) .generated-ball { 
+            background: linear-gradient(145deg, var(--color-red), var(--color-red-light)); 
+            border-color: var(--color-gold); 
+            color: white; 
+        }
+        .sequence-card:nth-child(3) .generated-ball { 
+            background: linear-gradient(145deg, var(--color-light-green), var(--color-medium-green)); 
+            border-color: var(--color-gold); 
+            color: white; 
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Animação de Bolas Passando (Fundo) - Mantida */
+        #rolling-balls-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; 
+            overflow: hidden; 
+            z-index: 1; 
+        }
+        .rolling-ball {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 70%); 
+            border: 1px solid rgba(255, 215, 0, 0.3); 
+            opacity: 0; 
+            transform: scale(0.2) rotate(0deg); 
+            animation: rollAndFade 15s linear infinite; 
+            color: transparent; 
+            font-size: 0; 
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.1);
+            transition: all 0.3s ease-out; 
+        }
+        .rolling-ball.rolling-ball-1 { width: 50px; height: 50px; background-color: rgba(255, 215, 0, 0.1); border-color: rgba(255, 215, 0, 0.3); }
+        .rolling-ball.rolling-ball-2 { width: 60px; height: 60px; background-color: rgba(211, 47, 47, 0.1); border-color: rgba(211, 47, 47, 0.3); }
+        .rolling-ball.rolling-ball-3 { width: 70px; height: 70px; background-color: rgba(45, 90, 61, 0.1); border-color: rgba(45, 90, 61, 0.3); }
+        @keyframes rollAndFade {
+            0% { transform: translate(var(--start-x), var(--start-y)) scale(0.2) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.5; transform: translate(calc(var(--start-x) + 10vw), calc(var(--start-y) + 10vh)) scale(0.5) rotate(90deg); }
+            50% { opacity: 0.8; transform: translate(calc(var(--start-x) + 50vw), calc(var(--start-y) + 50vh)) scale(1) rotate(180deg); }
+            90% { opacity: 0.5; transform: translate(calc(var(--start-x) + 90vw), calc(var(--start-y) + 90vh)) scale(0.5) rotate(270deg); }
+            100% { transform: translate(var(--end-x), var(--end-y)) scale(0.2) rotate(360deg); opacity: 0; }
+        }
+        .rolling-balls-flash {
+            animation: flashBackground 0.8s ease-out forwards;
+        }
+        @keyframes flashBackground {
+            0% { background-color: transparent; }
+            50% { background-color: rgba(255, 215, 0, 0.2); }
+            100% { background-color: transparent; }
+        }
+
+        /* WhatsApp float */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 40px;
+            right: 40px;
+            background: #25d366;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            animation: float 3s ease-in-out infinite; 
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .generated-ball { width: 50px; height: 50px; font-size: 1.5rem; }
+            .rolling-ball.rolling-ball-1 { width: 30px; height: 30px; }
+            .rolling-ball.rolling-ball-2 { width: 40px; height: 40px; }
+            .rolling-ball.rolling-ball-3 { width: 50px; height: 50px; }
+        }
+        @media (max-width: 480px) {
+            .whatsapp-float { width: 50px; height: 50px; bottom: 20px; right: 20px; font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1 class="logo">🎱 GRUPO DA SORTE 🎱</h1>
+        <p class="subtitle">GERADOR DE NÚMEROS DE SORTEIO</p>
+    </header>
+
+    <main class="generator-section" id="number-generator-section">
+        <div id="rolling-balls-container"></div> 
+        <h2 id="generator-title">🎉 Suas Sequências da Sorte! 🎉</h2> 
+        <button id="generate-button" type="button">GERAR SEQUÊNCIAS AGORA 🍀</button>
+        
+        <div id="sequences-container">
+        </div>
+        
+        <p id="mode-status" style="margin-top: 20px; font-size: 1.1rem; color: var(--color-gold); font-weight: bold;"></p>
+    </main>
+
+    <a href="https://wa.me/5588999999999?text=Olá! Gostaria de saber mais sobre os sorteios do Grupo da Sorte!" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Fale conosco pelo WhatsApp">
+        💬
+    </a>
+
+    <script>
+        // DOM ELEMENTS
+        const sequencesContainer = document.getElementById('sequences-container');
+        const generateButton = document.getElementById('generate-button');
+        const rollingBallsContainer = document.getElementById('rolling-balls-container');
+        const modeStatus = document.getElementById('mode-status'); 
+
+        let isDrawing = false; 
+        let clickCount = 0; // Contador de cliques para a alternância
+        
+        // ----------------------------------------------------------------------
+        // 🚨 CONFIGURAÇÃO DE SEQUÊNCIAS FIXAS (9 no total)
+        // ----------------------------------------------------------------------
+        const CYCLE_SEQUENCES = [
+            // 1º Bloco
+            ['8', '1', '8', '5'], 
+            ['6', '2', '2', '4'], 
+            ['7', '5', '4', '6'], 
+        
+            // 2º Bloco
+            ['7', '0', '5', '4'], 
+            ['8', '2', '0', '0'], 
+            ['3', '7', '0', '4'], 
+            
+            // 3º Bloco
+            ['9', '1', '2', '0'], 
+            ['5', '8', '6', '9'], 
+            ['2', '5', '3', '8']
+        ];
+        const TOTAL_FIXED_SEQUENCES = CYCLE_SEQUENCES.length; // Agora é 9
+        const FIXED_REPETITION_COUNT = 3; // O número de cliques que o modo fixo vai durar (mantido em 3)
+        
+        // CONFIGURAÇÕES GERAIS
+        const numberOfSequences = 3; // O número de cards exibidas (sempre 3)
+        const numbersPerSequence = 4;
+        const ballRevealDelay = 1500; // 1.5 segundos
+
+        // ----------------------------------------------------------------------
+        // FUNÇÃO DE GERAÇÃO ALEATÓRIA (0 a 9)
+        // ----------------------------------------------------------------------
+        function generateRandomSequence(length) {
+            const sequence = [];
+            for (let i = 0; i < length; i++) {
+                const randomNumber = Math.floor(Math.random() * 10); 
+                sequence.push(String(randomNumber).padStart(2, '0'));
+            }
+            return sequence;
+        }
+
+        // ----------------------------------------------------------------------
+        // FUNÇÃO DE GERAÇÃO PRINCIPAL
+        // ----------------------------------------------------------------------
+        function generateSequences(mode) {
+            const sequences = [];
+            
+            if (mode === 'RANDOM') {
+                for (let i = 0; i < numberOfSequences; i++) {
+                    sequences.push(generateRandomSequence(numbersPerSequence));
+                }
+            } else if (mode === 'FIXED') {
+                // Mapeia o clickCount para um índice de início de 3 sequências (0 a 8)
+                // Ciclo 0 (Cliques 0, 3, 6, 9...): começa em 0 (A1)
+                // Ciclo 1 (Cliques 1, 4, 7, 10...): começa em 3 (A2)
+                // Ciclo 2 (Cliques 2, 5, 8, 11...): começa em 6 (A3)
+                const startIndex = (clickCount % FIXED_REPETITION_COUNT) * numberOfSequences; 
+
+                // Adiciona as 3 sequências a partir do startIndex
+                for (let i = 0; i < numberOfSequences; i++) {
+                    const index = startIndex + i;
+                    // Embora o índice calculado vá de 0 a 8, usamos % TOTAL_FIXED_SEQUENCES para segurança (9 % 9 = 0)
+                    sequences.push(CYCLE_SEQUENCES[index % TOTAL_FIXED_SEQUENCES]);
+                }
+                
+                // --- Explicação da Ordem (No Modo Fixo): ---
+                // Clique 1: (0 % 3) * 3 = 0. Pega os índices 0, 1, 2 (A1, B1, C1)
+                // Clique 2: (1 % 3) * 3 = 3. Pega os índices 3, 4, 5 (A2, B2, C2)
+                // Clique 3: (2 % 3) * 3 = 6. Pega os índices 6, 7, 8 (A3, B3, C3)
+                // Clique 4: RANDOM (Aleatório)
+                // Clique 5: (0 % 3) * 3 = 0. Pega os índices 0, 1, 2 (A1, B1, C1) - Reinicia o bloco.
+            }
+            return sequences;
+        }
+
+        // ----------------------------------------------------------------------
+        // FUNÇÃO PRINCIPAL DE SORTEIO E ALTERNÂNCIA
+        // ----------------------------------------------------------------------
+        function startRollingAndDraw() {
+            if (isDrawing) return;
+            isDrawing = true;
+            
+            // Lógica do Ciclo: O ciclo tem 4 cliques (3 fixos + 1 aleatório)
+            const cycleIndex = clickCount % (FIXED_REPETITION_COUNT + 1); // 0, 1, 2, 3, 0, 1, 2, 3...
+            
+            // Modos: Os primeiros 3 cliques (0, 1, 2) são FIXOS. O 4º clique (3) é ALEATÓRIO.
+            const mode = (cycleIndex < FIXED_REPETITION_COUNT) ? 'FIXED' : 'RANDOM';
+            
+            const sequencesToDraw = generateSequences(mode);
+
+            // 1. Atualiza o status
+            let buttonText = '';
+            let statusText = '';
+            if (mode === 'RANDOM') {
+                buttonText = 'GERAR SEQUÊNCIAS FIXAS  🎯';
+                statusText = 'Modo Atual: 🎲 Aleatório (0-9). Próximo clique iniciar .';
+            } else {
+                // Calcula qual repetição do modo fixo estamos (1, 2 ou 3)
+                const repetition = cycleIndex + 1;
+                buttonText = (repetition < FIXED_REPETITION_COUNT) 
+                    ? `GERAR SEQUÊNCIAS FIXAS (${repetition + 1}/3) 🎯` 
+                    : 'GERAR SEQUÊNCIAS ALEATÓRIAS 🎲';
+                
+                statusText = `Modo Atual: 🎯 Fixo (Repetição ${repetition}/3).`;
+                if (repetition === FIXED_REPETITION_COUNT) {
+                    statusText += ' Próximo clique será Aleatório (0-9).';
+                }
+            }
+            
+            generateButton.textContent = 'SORTEANDO... ⏳';
+            generateButton.disabled = true;
+            modeStatus.textContent = ''; // Limpa o status enquanto sorteia
+            
+            rollingBallsContainer.classList.add('rolling-balls-flash');
+            sequencesContainer.innerHTML = ''; 
+
+            // 2. Pequeno delay para o flash e o sorteio começar
+            setTimeout(() => {
+                rollingBallsContainer.classList.remove('rolling-balls-flash'); 
+
+                let totalExpectedDelay = 0;
+                
+                // 3. Desenha as 3 sequências
+                sequencesToDraw.forEach((sequence, i) => {
+                    const ballsContainer = createSequenceCard(i); 
+                    drawSequence(sequence, ballsContainer, i);
+
+                    const currentSequenceLength = sequence.length;
+                    const sequenceTotalTime = (i * (currentSequenceLength * ballRevealDelay / numberOfSequences)) + (currentSequenceLength * ballRevealDelay);
+                    totalExpectedDelay = Math.max(totalExpectedDelay, sequenceTotalTime);
+                });
+
+
+                // 4. Reabilita o botão e atualiza o status após a última bola
+                setTimeout(() => {
+                    isDrawing = false;
+                    generateButton.textContent = buttonText;
+                    generateButton.disabled = false;
+                    modeStatus.textContent = statusText;
+                    clickCount++; // Incrementa o contador para o próximo modo
+                }, totalExpectedDelay + 500); 
+                
+            }, 500); 
+        }
+
+        // --- Funções Auxiliares de UI (Mantidas) ---
+
+        function generateBackgroundBalls() {
+            rollingBallsContainer.innerHTML = '';
+            const numBalls = 30; 
+            for (let i = 0; i < numBalls; i++) {
+                const ball = document.createElement('div');
+                ball.className = `rolling-ball rolling-ball-${i % 3 + 1}`; 
+                const startX = Math.random() * 100 + 'vw';
+                const startY = Math.random() * 100 + 'vh';
+                const endX = (Math.random() * 200 - 50) + 'vw'; 
+                const endY = (Math.random() * 200 - 50) + 'vh';
+                ball.style.setProperty('--start-x', startX);
+                ball.style.setProperty('--start-y', startY);
+                ball.style.setProperty('--end-x', endX);
+                ball.style.setProperty('--end-y', endY);
+                ball.style.animationDelay = `${-Math.random() * 15}s`; 
+                ball.style.animationDuration = `${15 + Math.random() * 10}s`; 
+                rollingBallsContainer.appendChild(ball);
+            }
+        }
+        
+        function createSequenceCard(index) {
+            const card = document.createElement('div');
+            card.className = 'sequence-card';
+            card.dataset.index = index; 
+            card.style.animationDelay = `${index * 0.15}s`;
+            card.innerHTML = `
+                <h3 class="sequence-card-title">Sequência ${index + 1}</h3>
+                <div class="sequence-balls-display" id="sequence-${index}">
+                </div>
+            `;
+            sequencesContainer.appendChild(card);
+            return card.querySelector('.sequence-balls-display');
+        }
+
+        function drawSequence(sequence, ballsContainer, sequenceIndex) {
+            const sequenceStartDelay = sequenceIndex * (numbersPerSequence * ballRevealDelay / numberOfSequences);
+            
+            sequence.forEach((num, ballIndex) => {
+                setTimeout(() => {
+                    const ball = document.createElement('div');
+                    ball.className = 'generated-ball';
+                    ball.textContent = num;
+                    ball.style.animation = `bounceIn 0.5s ease-out forwards`;
+                    ballsContainer.appendChild(ball);
+                }, (ballIndex * ballRevealDelay) + sequenceStartDelay); 
+            });
+        }
+        
+        // Ação inicial ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            generateBackgroundBalls();
+            // Define o status inicial
+            modeStatus.textContent = '🎯Clique para iniciar.';
+            generateButton.addEventListener('click', startRollingAndDraw);
+        });
+    </script>
+</body>
+</html>
