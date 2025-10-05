@@ -433,12 +433,12 @@
                 statusText = 'Modo Atual: 🎲 Aleatório (0-9). Próximo clique iniciar .';
             } else {
                 // Calcula qual repetição do modo fixo estamos (1, 2 ou 3)
-                const repetition = cycleIndex + 1;
+                const repetition = cycleIndex;
                 buttonText = (repetition < FIXED_REPETITION_COUNT) 
-                    ? `GERAR SEQUÊNCIAS FIXAS (${repetition + 1}/3) 🎯` 
+                    ? `GERAR SEQUÊNCIAS FIXAS ( 🎯` 
                     : 'GERAR SEQUÊNCIAS ALEATÓRIAS 🎲';
                 
-                statusText = `Modo Atual: 🎯 Fixo (Repetição ${repetition}/3).`;
+                statusText = `Modo Atual: 🎯 Fixo (Repetição ${repetition}.`;
                 if (repetition === FIXED_REPETITION_COUNT) {
                     statusText += ' Próximo clique será Aleatório (0-9).';
                 }
