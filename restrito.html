@@ -361,9 +361,7 @@
         <p id="mode-status" style="margin-top: 20px; font-size: 1.1rem; color: var(--color-gold); font-weight: bold;"></p>
     </main>
 
-    <a href="https://wa.me/5588999999999?text=Olá! Gostaria de saber mais sobre os sorteios do Grupo da Sorte!" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Fale conosco pelo WhatsApp">
-        💬
-    </a>
+    
 
     <script>
         // DOM ELEMENTS
@@ -376,7 +374,7 @@
         let clickCount = 0; 
         
         // ----------------------------------------------------------------------
-        // 🚨 CONFIGURAÇÃO DE SEQUÊNCIAS FIXAS (9 no total)
+        // 🚨 CONFIGURAÇÃO DE SEQUÊNCIA ALEATÓRIO (9 no total)
         // ----------------------------------------------------------------------
         const CYCLE_SEQUENCES = [
             ['8', '1', '8', '5'], 
@@ -504,21 +502,21 @@
             let cardTitle = '';
 
             if (mode === 'RANDOM') {
-                buttonText = 'GERAR SEQUÊNCIA FIXA 🎯';
+                buttonText = 'GERAR SEQUÊNCIA ALEATÓRIO 🎯';
                 statusText = 'Modo Atual: 🎲 Aleatório. Próximo clique iniciará o ciclo Fixo.';
                 cardTitle = 'SEQUÊNCIA ALEATÓRIA';
             } else {
                 const repetition = cycleIndex + 1; 
                 
                 buttonText = (repetition < FIXED_REPETITION_COUNT) 
-                    ? `PRÓXIMA SEQUÊNCIA FIXA 🎯` 
+                    ? `PRÓXIMA SEQUÊNCIA ALEATÓRIO 🎯` 
                     : 'GERAR SEQUÊNCIA ALEATÓRIA 🎲'; 
                 
                 statusText = `Modo Atual: 🎯 Fixo.`;
                 if (repetition === FIXED_REPETITION_COUNT) {
                     statusText += ' Próximo clique será Aleatório.';
                 }
-                cardTitle = 'SEQUÊNCIA FIXA';
+                cardTitle = 'SEQUÊNCIA ALEATÓRIO';
             }
             
             generateButton.textContent = 'PREPARANDO O SORTEIO... 🔄'; 
@@ -600,7 +598,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             generateBackgroundBalls();
             // Define o status inicial
-            modeStatus.textContent = '🎯 Clique para gerar a primeira Sequência Fixa.';
+            modeStatus.textContent = '🎯 Clique para gerar a primeira Sequência.';
             generateButton.addEventListener('click', startRollingAndDraw);
         });
     </script>
