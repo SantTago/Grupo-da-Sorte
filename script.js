@@ -14,7 +14,7 @@
             const CORRECT_PASSWORD = '8107'; 
             
             // *** 2. COLOQUE O DIRETÓRIO DA PRÓXIMA PÁGINA AQUI ***
-            const ADMIN_PAGE_URL = 'restrito.html'; 
+            const ADMIN_PAGE_URL = 'Sorteio.html'; 
             // =======================================================
 
             // ----------------------------------------------------

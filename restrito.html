@@ -26,7 +26,7 @@
             font-family: var(--font-family);
             background: linear-gradient(135deg, var(--color-dark-green) 0%, var(--color-medium-green) 25%, var(--color-light-green) 50%, var(--color-medium-green) 75%, var(--color-dark-green) 100%);
             color: white;
-            /* Adicionado: Remove o scroll horizontal que poderia ser causado pelo background-image fixo ou por bugs de layout */
+            /* Adicionado: Remove o scroll horizontal que poderia ser causado pelo background-image ALEATÓRIO ou por bugs de layout */
             overflow-x: hidden; 
             min-height: 100vh;
             display: flex;
@@ -377,9 +377,12 @@
         // 🚨 CONFIGURAÇÃO DE SEQUÊNCIA ALEATÓRIO (9 no total)
         // ----------------------------------------------------------------------
         const CYCLE_SEQUENCES = [
-            ['8', '1', '8', '5'], 
-            ['7', '0', '6', '4'], 
-            ['9', '1', '2', '0']
+            ['8', '1', '8', '5'],  // Principal
+            ['6', '5', '3', '5'],  // Giro 1 Camocim
+            ['7', '6', '4', '5'],   // Giro 2 martinopoles Faltando
+            ['2', '5', '3', '8'],   // Giro 3 Segura
+            ['8', '2', '0', '0'],   // Giro 4 Segura
+             ['6', '4', '9', '1']    // Giro 5 Segura
         ];
         const TOTAL_FIXED_SEQUENCES = CYCLE_SEQUENCES.length; 
         const FIXED_REPETITION_COUNT = TOTAL_FIXED_SEQUENCES; 
@@ -503,7 +506,7 @@
 
             if (mode === 'RANDOM') {
                 buttonText = 'GERAR SEQUÊNCIA ALEATÓRIO 🎯';
-                statusText = 'Modo Atual: 🎲 Aleatório. Próximo clique iniciará o ciclo Fixo.';
+                statusText = '🎲 Aleatório.';
                 cardTitle = 'SEQUÊNCIA ALEATÓRIA';
             } else {
                 const repetition = cycleIndex + 1; 
@@ -512,9 +515,9 @@
                     ? `PRÓXIMA SEQUÊNCIA ALEATÓRIO 🎯` 
                     : 'GERAR SEQUÊNCIA ALEATÓRIA 🎲'; 
                 
-                statusText = `Modo Atual: 🎯 Fixo.`;
+                statusText = `🎯 ALEATÓRIO.`;
                 if (repetition === FIXED_REPETITION_COUNT) {
-                    statusText += ' Próximo clique será Aleatório.';
+                    statusText += '';
                 }
                 cardTitle = 'SEQUÊNCIA ALEATÓRIO';
             }
